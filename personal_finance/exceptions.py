@@ -6,3 +6,6 @@ pass
 
 class NotFoundError(FinanceError):
 pass
+
+class ValidationError(FinanceError):
+pass
