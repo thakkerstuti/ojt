@@ -53,3 +53,22 @@ def register_user():
     last_name  = get_input("Enter Last Name: ", is_valid_name)
     age        = get_input("Enter Age: ", is_valid_age)
     email      = get_input("Enter Email: ", is_valid_email)
+
+    while True:
+        username = input("Create a Username: ")
+        if username_exists(username):
+            print("Username already exists. Try again.\n")
+        else:
+            break
+
+    while True:
+        password = getpass("Create a Password: ")
+        if is_valid_password(password):
+            print("Password accepted!")
+            break
+        else:
+            print("\n You Entered An Invalid password!")
+            print("Password must be at least 8 characters long, include:")
+            print("- Letters")
+            print("- Digits")
+            print("- Special characters\n")
