@@ -24,3 +24,11 @@ def is_valid_password(password):
     if not re.search(r"[A-Za-z]", password):
         return False
     return True
+
+def get_input(prompt, validation_function):
+    while True:
+        value = input(prompt)
+        if validation_function(value):
+            return value
+        else:
+            print("The input is invalid. Please try again.\n")
