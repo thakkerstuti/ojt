@@ -118,3 +118,13 @@ while True:
     print("3. Exit\n")
 
     choice = input("Choose an option (1/2/3): ")
+
+    if choice == "1":
+        register_user()
+    elif choice == "2":
+        login_user()
+    elif choice == "3":
+        print("Thank you for using Our System!")
+        break
+    else:
+        print("You Choose An Invalid option! Please try again.\n")
