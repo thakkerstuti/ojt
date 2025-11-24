@@ -116,3 +116,5 @@ while True:
     print("1. New User & Want to Register")
     print("2. Account Already Exists & Ready To Login")
     print("3. Exit\n")
+
+    choice = input("Choose an option (1/2/3): ")
