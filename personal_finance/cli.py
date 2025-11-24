@@ -32,3 +32,16 @@ def get_input(prompt, validation_function):
             return value
         else:
             print("The input is invalid. Please try again.\n")
+
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def username_exists(username):
+    if not os.path.exists("users.csv"):
+        return False
+    with open("users.csv", "r") as file:
+        reader = csv.reader(file)
+        for row in reader:
+            if row[0] == username:
+                return True
+    return False
