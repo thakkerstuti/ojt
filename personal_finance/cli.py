@@ -72,3 +72,14 @@ def register_user():
             print("- Letters")
             print("- Digits")
             print("- Special characters\n")
+
+    csv_file = 'userdatanew.csv'
+    file_exists = os.path.exists(csv_file)
+
+    with open(csv_file, 'a', newline='') as f:
+        writer = csv.writer(f)
+        if not file_exists:
+            writer.writerow(["First Name", "Last Name", "Age", "Email"])
+        writer.writerow([first_name, last_name, age, email])
+
+    encrypted = hash_password(password)
