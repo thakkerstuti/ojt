@@ -100,3 +100,14 @@ def login_user():
     if not os.path.exists("users.csv"):
         print("No registered users found. Please register first.")
         return
+    
+    encrypted = hash_password(password)
+
+    with open("users.csv", "r") as file:
+        reader = csv.reader(file)
+        for row in reader:
+            if row[0] == username and row[1] == encrypted:
+                print(f"Login Was Successful! Welcome, {username}.\n")
+                exit()
+
+    print("Incorrect username or password.\n")
