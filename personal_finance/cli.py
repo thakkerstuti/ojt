@@ -45,3 +45,11 @@ def username_exists(username):
             if row[0] == username:
                 return True
     return False
+
+def register_user():
+    print("\nUSER REGISTRATION")
+
+    first_name = get_input("Enter First Name: ", is_valid_name)
+    last_name  = get_input("Enter Last Name: ", is_valid_name)
+    age        = get_input("Enter Age: ", is_valid_age)
+    email      = get_input("Enter Email: ", is_valid_email)
