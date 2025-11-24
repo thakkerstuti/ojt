@@ -83,3 +83,10 @@ def register_user():
         writer.writerow([first_name, last_name, age, email])
 
     encrypted = hash_password(password)
+
+    with open("users.csv", "a", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow([username, encrypted])
+
+    print("\nRegistration successful!")
+    print("You can now login.\n")
