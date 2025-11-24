@@ -90,3 +90,13 @@ def register_user():
 
     print("\nRegistration successful!")
     print("You can now login.\n")
+
+def login_user():
+    print("\n<-USER LOGIN->")
+
+    username = input("Enter Username: ")
+    password = getpass("Enter Password: ")
+
+    if not os.path.exists("users.csv"):
+        print("No registered users found. Please register first.")
+        return
