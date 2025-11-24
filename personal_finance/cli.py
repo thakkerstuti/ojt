@@ -111,3 +111,8 @@ def login_user():
                 exit()
 
     print("Incorrect username or password.\n")
+
+while True:
+    print("1. New User & Want to Register")
+    print("2. Account Already Exists & Ready To Login")
+    print("3. Exit\n")
