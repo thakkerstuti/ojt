@@ -5,19 +5,17 @@ import hashlib
 from getpass import getpass
 from datetime import datetime
 
-# Force Python to always read/write CSV files
-# in the same folder as this script.
+
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-#               AUTO-CREATE / AUTO-REPAIR CSV HEADERS
+
 def initialize_password_file():
-# Defines a function named initialize_password_file.       
+       
     header = ["username", "password"]
 
     if not os.path.exists("password.csv"):
-# If the file "password.csv" does not exist, it creates the file and writes the header row to it.
+
         with open("password.csv", "w", newline="") as f:
-#csv.writer(f) = This creates a CSV writer object that knows how to write rows into the file f.writerow(header) = This tells the writer to write one row in the CSV file.
             csv.writer(f).writerow(header)
         return
 
@@ -25,18 +23,15 @@ def initialize_password_file():
         lines = [line.strip() for line in f.readlines()]
 
     if len(lines) == 0:
-#File exists but is empty (0 lines). Re-create the file and write the correct header
         with open("password.csv", "w", newline="") as f:
             csv.writer(f).writerow(header)
         return
 
     first_row = lines[0].split(",")
-#If the first row of the existing file does not match the expected header, it rewrites the file with the correct header and preserves any valid data rows.
     if first_row != header:
         with open("password.csv", "w", newline="") as f:
             writer = csv.writer(f)
             writer.writerow(header)
-#Write correct header again.Re-add old contents below the corrected header. This stops data loss.
             for line in lines:
                 if line.strip():
                     writer.writerow(line.split(","))
@@ -252,7 +247,7 @@ def view_expenses():
         return
 
     print("\n#   DATE         AMOUNT   CATEGORY     DESCRIPTION      MODE")
-    print("----------------------------------------------------------------")
+    print("==============================================================")
 
     for i, row in enumerate(rows[1:], start=1):
         if len(row) < 5:  
