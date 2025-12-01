@@ -332,8 +332,7 @@ def finance_menu():
         print("2. View expenses")
         print("3. Edit/Delete an expense")
         print("4. View monthly summary")
-        print("5. Set or update monthly budget")
-        print("6. Logout")
+        print("5. Logout")
 
         ch = input("Enter choice: ").strip()
 
@@ -346,8 +345,6 @@ def finance_menu():
         elif ch == "4":
             monthly_summary()
         elif ch == "5":
-            print("Feature coming soon!\n")
-        elif ch == "6":
             print("Logged out.\n")
             break
         else:
