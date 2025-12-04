@@ -798,3 +798,28 @@ def finance_menu(username):
         print("7. Export expenses to CSV")
         print("8. Change password")
         print("9. Logout")
+
+ch = input("Enter choice: ").strip()
+
+        if ch == "1":
+            add_expense(username)
+        elif ch == "2":
+            view_expenses(username)
+        elif ch == "3":
+            edit_delete_expense(username)
+        elif ch == "4":
+            monthly_summary(username)
+        elif ch == "5":
+            set_or_update_budget(username)
+        elif ch == "6":
+            savings_menu(username)
+        elif ch == "7":
+            export_expenses(username)
+        elif ch == "8":
+            change_password(username)
+        elif ch == "9":
+            print("Logged out.\n")
+            break
+        else:
+            print("Invalid option.\n")
+
