@@ -770,4 +770,18 @@ def edit_delete_expense(username):
         with open("expenses.csv", "w", newline="") as f:
             csv.writer(f).writerows(rows)
 
+def monthly_summary(username):
+    print("\n--- MONTHLY SUMMARY ---")
+    month = get_current_month()
+    spent = calculate_monthly_spending(username)
+
+    print(f"Total spent in {month}: ₹{spent}")
+
+    budget = read_user_budget(username, month)
+    if budget:
+        remaining = budget["budget_amount"] - spent
+        print(f"Budget: ₹{budget['budget_amount']}")
+        print(f"Remaining: ₹{remaining}\n")
+    else:
+        print("No budget set for this month.\n")
 
