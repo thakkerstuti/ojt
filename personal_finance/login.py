@@ -785,3 +785,16 @@ def monthly_summary(username):
     else:
         print("No budget set for this month.\n")
 
+
+def finance_menu(username):
+    while True:
+        print("\n===== FINANCE MENU =====")
+        print("1. Add a new expense")
+        print("2. View expenses")
+        print("3. Edit/Delete an expense")
+        print("4. View monthly summary")
+        print("5. Set or update monthly budget")
+        print("6. Savings goals")
+        print("7. Export expenses to CSV")
+        print("8. Change password")
+        print("9. Logout")
