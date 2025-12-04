@@ -494,10 +494,10 @@ def check_budget_alerts(username):
             budget["alerted_50"],
             budget["alerted_80"],
             budget["alerted_exceeded"]
+        )
 
 
-
- def create_savings_goal(username):
+def create_savings_goal(username):
     print("\n--- CREATE SAVINGS GOAL ---\n")
     goal_name = input("Enter goal name (e.g., New Phone, Laptop, Trip): ").strip()
 
@@ -750,25 +750,27 @@ def edit_delete_expense(username):
 
 
     print("1. Edit")
-        print("2. Delete")
+    print("2. Delete")
 
-        action = input("Choose: ").strip()
+    action = input("Choose: ").strip()
 
-        if action == "2":
-            rows.pop(choice)
-            print("Expense deleted.\n")
+    if action == "2":
+        rows.pop(choice)
+        print("Expense deleted.\n")
 
-        elif action == "1":
-            amt2 = input(f"Amount ({amt}): ").strip() or amt
-            cat2 = input(f"Category ({cat}): ").strip() or cat
-            desc2 = input(f"Description ({desc}): ").strip() or desc
-            mode2 = input(f"Payment ({mode}): ").strip() or mode
+    elif action == "1":
+        amt2 = input(f"Amount ({amt}): ").strip() or amt
+        cat2 = input(f"Category ({cat}): ").strip() or cat
+        desc2 = input(f"Description ({desc}): ").strip() or desc
+        mode2 = input(f"Payment ({mode}): ").strip() or mode
 
-            rows[choice] = [date, amt2, cat2, desc2, mode2]
-            print("✔ Expense updated.\n")
+        rows[choice] = [date, amt2, cat2, desc2, mode2]
+        print("✔ Expense updated.\n")
 
-        with open("expenses.csv", "w", newline="") as f:
-            csv.writer(f).writerows(rows)
+    with open("expenses.csv", "w", newline="") as f:
+        csv.writer(f).writerows(rows)
+
+
 
 def monthly_summary(username):
     print("\n--- MONTHLY SUMMARY ---")
@@ -797,9 +799,9 @@ def finance_menu(username):
         print("6. Savings goals")
         print("7. Export expenses to CSV")
         print("8. Change password")
-        print("9. Logout")
+        print("9. Logout")
 
-ch = input("Enter choice: ").strip()
+        ch = input("Enter choice: ").strip()
 
         if ch == "1":
             add_expense(username)
@@ -823,6 +825,7 @@ ch = input("Enter choice: ").strip()
         else:
             print("Invalid option.\n")
 
+
 def login_user():
     print("\n--- USER LOGIN ---\n")
     username = input("Enter Username: ").strip()
@@ -843,7 +846,8 @@ def login_user():
 
     print("Incorrect username or password.\n")
 
-ef register_user():
+
+def register_user():
     print("\n--- USER REGISTRATION ---\n")
 
     first_name = get_input("Enter First Name: ", is_valid_name)
@@ -880,6 +884,7 @@ ef register_user():
     print("\nRegistration successful!\n")
     finance_menu(username)
 
+
 def main():
     while True:
         print("\n===== EXPENSE TRACKER =====")
@@ -898,5 +903,5 @@ def main():
             break
         else:
             print("Invalid option.\n")
-if _name_ == "_main_":
-    main()
+if __name__ == "__main__":
+    main()
