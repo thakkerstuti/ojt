@@ -879,3 +879,24 @@ ef register_user():
 
     print("\nRegistration successful!\n")
     finance_menu(username)
+
+def main():
+    while True:
+        print("\n===== EXPENSE TRACKER =====")
+        print("1. Register")
+        print("2. Login")
+        print("3. Exit")
+
+        ch = input("Choose (1/2/3): ").strip()
+
+        if ch == "1":
+            register_user()
+        elif ch == "2":
+            login_user()
+        elif ch == "3":
+            print("Thank you for using the app!")
+            break
+        else:
+            print("Invalid option.\n")
+if _name_ == "_main_":
+    main()
