@@ -842,3 +842,40 @@ def login_user():
                 return
 
     print("Incorrect username or password.\n")
+
+ef register_user():
+    print("\n--- USER REGISTRATION ---\n")
+
+    first_name = get_input("Enter First Name: ", is_valid_name)
+    last_name = get_input("Enter Last Name: ", is_valid_name)
+    age = get_input("Enter Age: ", is_valid_age)
+    email = get_input("Enter Email: ", is_valid_email)
+
+    while True:
+        username = input("Create a Username: ").strip()
+        if username_exists(username):
+            print("Username already exists.\n")
+        else:
+            break
+
+    while True:
+        password = getpass("Create a Password: ")
+        errors = is_valid_password(password)
+        if errors:
+            for err in errors:
+                print(err)
+            print()
+        else:
+            break
+
+    encrypted = hash_password(password)
+
+
+    with open("userdata.csv", "a", newline="") as f:
+        csv.writer(f).writerow([first_name, last_name, age, email, username])
+
+    with open("password.csv", "a", newline="") as f:
+        csv.writer(f).writerow([username, encrypted])
+
+    print("\nRegistration successful!\n")
+    finance_menu(username)
