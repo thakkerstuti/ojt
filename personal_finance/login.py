@@ -823,3 +823,22 @@ ch = input("Enter choice: ").strip()
         else:
             print("Invalid option.\n")
 
+def login_user():
+    print("\n--- USER LOGIN ---\n")
+    username = input("Enter Username: ").strip()
+    password = getpass("Enter Password: ").strip()
+
+    encrypted = hash_password(password)
+
+    if not os.path.exists("password.csv"):
+        print("No users registered yet.\n")
+        return
+
+    with open("password.csv", "r") as f:
+        for row in csv.reader(f):
+            if row and row[0] == username and row[1] == encrypted:
+                print(f"\nWelcome back, {username}!\n")
+                finance_menu(username)
+                return
+
+    print("Incorrect username or password.\n")
