@@ -494,3 +494,259 @@ def check_budget_alerts(username):
             budget["alerted_50"],
             budget["alerted_80"],
             budget["alerted_exceeded"]
+
+
+
+ def create_savings_goal(username):
+    print("\n--- CREATE SAVINGS GOAL ---\n")
+    goal_name = input("Enter goal name (e.g., New Phone, Laptop, Trip): ").strip()
+
+    while True:
+        target = input("Enter target amount: ").strip()
+        try:
+            target = float(target)
+            if target <= 0:
+                print("Target must be greater than zero.")
+                continue
+            break
+        except:
+            print("Enter a valid number.")
+
+    goals = get_user_savings_goals(username)
+
+    new_id = 1
+    if goals:
+        new_id = max(g["goal_id"] for g in goals) + 1
+
+    goals.append({
+        "goal_id": new_id,
+        "goal_name": goal_name,
+        "target_amount": target,
+        "current_amount": 0.0,
+        "created_on": datetime.now().strftime("%Y-%m-%d")
+    })
+
+    write_user_savings_goals(username, goals)
+
+    print(f"Savings goal '{goal_name}' created with target ₹{target}\n")
+
+
+def view_savings_goals(username):
+    print("\n--- YOUR SAVINGS GOALS ---\n")
+    goals = get_user_savings_goals(username)
+
+    if not goals:
+        print("No savings goals found.\n")
+        return
+
+    for g in goals:
+        print(f"ID: {g['goal_id']}")
+        print(f"Goal Name: {g['goal_name']}")
+        print(f"Target: ₹{g['target_amount']}")
+        print(f"Saved: ₹{g['current_amount']}")
+        print(f"Remaining: ₹{g['target_amount'] - g['current_amount']}")
+        print("-----------------------------")
+
+
+def add_money_to_savings(username):
+    print("\n--- ADD MONEY TO SAVINGS GOAL ---\n")
+    goals = get_user_savings_goals(username)
+
+    if not goals:
+        print("No goals exist. Create one first.\n")
+        return
+
+    for g in goals:
+        print(f"{g['goal_id']}. {g['goal_name']} — Saved ₹{g['current_amount']} / ₹{g['target_amount']}")
+
+    while True:
+        try:
+            goal_id = int(input("Enter goal ID to add money: ").strip())
+            break
+        except:
+            print("Invalid ID.")
+
+    selected = None
+    for g in goals:
+        if g["goal_id"] == goal_id:
+            selected = g
+            break
+
+    if not selected:
+        print("Goal not found.\n")
+        return
+
+    while True:
+        amount = input("Enter amount to add: ").strip()
+        try:
+            amount = float(amount)
+            if amount <= 0:
+                print("Enter a positive number.")
+                continue
+            break
+        except:
+            print("Invalid amount.")
+
+    selected["current_amount"] += amount
+
+    write_user_savings_goals(username, goals)
+
+    print(f"Added ₹{amount} to '{selected['goal_name']}'")
+    print(f"Progress: ₹{selected['current_amount']} / ₹{selected['target_amount']}\n")
+
+
+def delete_savings_goal(username):
+    print("\n--- DELETE SAVINGS GOAL ---\n")
+    goals = get_user_savings_goals(username)
+
+    if not goals:
+        print("No goals to delete.\n")
+        return
+
+    for g in goals:
+        print(f"{g['goal_id']}. {g['goal_name']} (Saved ₹{g['current_amount']})")
+
+    while True:
+        try:
+            goal_id = int(input("Enter goal ID to delete: ").strip())
+            break
+        except:
+            print("Invalid ID.")
+
+    new_goals = [g for g in goals if g["goal_id"] != goal_id]
+
+    write_user_savings_goals(username, new_goals)
+
+    print("Goal deleted successfully.\n")
+
+
+def savings_menu(username):
+    """ Sub-menu for savings feature """
+    while True:
+        print("\n--- SAVINGS MENU ---")
+        print("1. Create Savings Goal")
+        print("2. View Savings Goals")
+        print("3. Add Money to Goal")
+        print("4. Delete Goal")
+        print("5. Back to Main Menu")
+
+        ch = input("Choose: ").strip()
+
+        if ch == "1":
+            create_savings_goal(username)
+        elif ch == "2":
+            view_savings_goals(username)
+        elif ch == "3":
+            add_money_to_savings(username)
+        elif ch == "4":
+            delete_savings_goal(username)
+        elif ch == "5":
+            break
+        else:
+            print("Invalid choice.\n")
+
+
+def export_expenses(username):
+    print("\n--- EXPORT EXPENSES ---\n")
+
+    export_name = f"exported_expenses_{username}.csv"
+
+    if not os.path.exists("expenses.csv"):
+        print("No expenses found.\n")
+        return
+
+    with open("expenses.csv", "r") as f:
+        rows = list(csv.reader(f))
+
+    header = rows[0]
+    user_rows = [header]
+
+    user_rows.extend(rows[1:])
+
+    with open(export_name, "w", newline="") as f:
+        csv.writer(f).writerows(user_rows)
+
+    print(f"Expenses successfully exported to {export_name}\n")
+
+
+def add_expense(username):
+    print("\n--- ADD NEW EXPENSE ---")
+
+    while True:
+        amount = input("Enter amount: ").strip()
+        try:
+            amount = float(amount)
+            break
+        except:
+            print("Enter a valid number.")
+
+    category = input("Enter category (Food/Travel/Shopping/Bills/Other): ").strip()
+    description = input("Enter description: ").strip()
+    payment = input("Enter payment mode (Cash/UPI/Card): ").strip()
+    date = datetime.now().strftime("%Y-%m-%d")
+
+    with open("expenses.csv", "a", newline="") as f:
+        csv.writer(f).writerow([date, amount, category, description, payment])
+
+    print("Expense added.\n")
+
+    check_budget_alerts(username)
+
+
+def view_expenses(username):
+    print("\n--- ALL EXPENSES ---")
+
+    if not os.path.exists("expenses.csv"):
+        print("No expenses found.\n")
+        return
+
+    with open("expenses.csv", "r") as f:
+        rows = list(csv.reader(f))
+
+    if len(rows) <= 1:
+        print("No expenses recorded yet.\n")
+        return
+
+    print("\n#   DATE         AMOUNT   CATEGORY     DESCRIPTION      MODE")
+    print("----------------------------------------------------------------")
+
+    for i, row in enumerate(rows[1:], start=1):
+        if len(row) < 5:
+            continue
+        date, amt, cat, desc, mode = row
+        print(f"{i}.  {date:<12} {amt:<8} {cat:<12} {desc:<15} {mode}")
+
+
+
+def edit_delete_expense(username):
+    print("\n--- EDIT/DELETE EXPENSE ---")
+
+    if not os.path.exists("expenses.csv"):
+        print("No expenses found.\n")
+        return
+
+    with open("expenses.csv", "r") as f:
+        rows = list(csv.reader(f))
+
+    if len(rows) <= 1:
+        print("No expenses to modify.\n")
+        return
+
+    for i, row in enumerate(rows[1:], start=1):
+        print(f"{i}. {row}")
+
+    try:
+        choice = int(input("Choose index: "))
+    except:
+        print("Invalid input.\n")
+        return
+
+    if choice < 1 or choice >= len(rows):
+        print("Invalid index.\n")
+        return
+
+    entry = rows[choice]
+    date, amt, cat, desc, mode = entry  
+
+    
+             
