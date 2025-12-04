@@ -748,5 +748,26 @@ def edit_delete_expense(username):
     entry = rows[choice]
     date, amt, cat, desc, mode = entry  
 
-    
-             
+
+    print("1. Edit")
+        print("2. Delete")
+
+        action = input("Choose: ").strip()
+
+        if action == "2":
+            rows.pop(choice)
+            print("Expense deleted.\n")
+
+        elif action == "1":
+            amt2 = input(f"Amount ({amt}): ").strip() or amt
+            cat2 = input(f"Category ({cat}): ").strip() or cat
+            desc2 = input(f"Description ({desc}): ").strip() or desc
+            mode2 = input(f"Payment ({mode}): ").strip() or mode
+
+            rows[choice] = [date, amt2, cat2, desc2, mode2]
+            print("✔ Expense updated.\n")
+
+        with open("expenses.csv", "w", newline="") as f:
+            csv.writer(f).writerows(rows)
+
+
