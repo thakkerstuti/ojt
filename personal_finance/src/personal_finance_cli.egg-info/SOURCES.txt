@@ -1,0 +1,10 @@
+LICENSE
+README.md
+pyproject.toml
+src/personal_finance/__init__.py
+src/personal_finance/main.py
+src/personal_finance_cli.egg-info/PKG-INFO
+src/personal_finance_cli.egg-info/SOURCES.txt
+src/personal_finance_cli.egg-info/dependency_links.txt
+src/personal_finance_cli.egg-info/entry_points.txt
+src/personal_finance_cli.egg-info/top_level.txt

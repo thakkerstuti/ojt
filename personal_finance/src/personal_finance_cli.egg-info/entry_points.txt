@@ -1,0 +1,2 @@
+[console_scripts]
+personal-finance = personal_finance.main:main
