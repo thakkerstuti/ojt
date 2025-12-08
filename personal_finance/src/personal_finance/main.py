@@ -4,28 +4,38 @@ import re
 import hashlib
 from getpass import getpass
 from datetime import datetime
+from pathlib import Path
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
+# Define data directory in user's home folder
+DATA_DIR = Path.home() / ".personal_finance_data"
 
+def ensure_data_dir():
+    if not DATA_DIR.exists():
+        DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+def get_file_path(filename):
+    ensure_data_dir()
+    return DATA_DIR / filename
 
 def initialize_password_file():
     header = ["username", "password"]
-    if not os.path.exists("password.csv"):
-        with open("password.csv", "w", newline="") as f:
+    file_path = get_file_path("password.csv")
+    if not file_path.exists():
+        with open(file_path, "w", newline="") as f:
             csv.writer(f).writerow(header)
         return
 
-    with open("password.csv", "r") as f:
+    with open(file_path, "r") as f:
         lines = [line.strip() for line in f.readlines()]
 
     if len(lines) == 0:
-        with open("password.csv", "w", newline="") as f:
+        with open(file_path, "w", newline="") as f:
             csv.writer(f).writerow(header)
         return
 
     first_row = lines[0].split(",")
     if first_row != header:
-        with open("password.csv", "w", newline="") as f:
+        with open(file_path, "w", newline="") as f:
             writer = csv.writer(f)
             writer.writerow(header)
             for line in lines:
@@ -35,22 +45,23 @@ def initialize_password_file():
 
 def initialize_userdata_file():
     header = ["First Name", "Last Name", "Age", "Email", "Username"]
-    if not os.path.exists("userdata.csv"):
-        with open("userdata.csv", "w", newline="") as f:
+    file_path = get_file_path("userdata.csv")
+    if not file_path.exists():
+        with open(file_path, "w", newline="") as f:
             csv.writer(f).writerow(header)
         return
 
-    with open("userdata.csv", "r") as f:
+    with open(file_path, "r") as f:
         lines = [line.strip() for line in f.readlines()]
 
     if len(lines) == 0:
-        with open("userdata.csv", "w", newline="") as f:
+        with open(file_path, "w", newline="") as f:
             csv.writer(f).writerow(header)
         return
 
     first_row = lines[0].split(",")
     if first_row != header:
-        with open("userdata.csv", "w", newline="") as f:
+        with open(file_path, "w", newline="") as f:
             writer = csv.writer(f)
             writer.writerow(header)
             for line in lines:
@@ -60,22 +71,23 @@ def initialize_userdata_file():
 
 def initialize_expense_file():
     header = ["date", "amount", "category", "description", "payment_mode"]
-    if not os.path.exists("expenses.csv"):
-        with open("expenses.csv", "w", newline="") as f:
+    file_path = get_file_path("expenses.csv")
+    if not file_path.exists():
+        with open(file_path, "w", newline="") as f:
             csv.writer(f).writerow(header)
         return
 
-    with open("expenses.csv", "r") as f:
+    with open(file_path, "r") as f:
         lines = [line.strip() for line in f.readlines()]
 
     if len(lines) == 0:
-        with open("expenses.csv", "w", newline="") as f:
+        with open(file_path, "w", newline="") as f:
             csv.writer(f).writerow(header)
         return
 
     first_row = lines[0].split(",")
     if first_row != header:
-        with open("expenses.csv", "w", newline="") as f:
+        with open(file_path, "w", newline="") as f:
             writer = csv.writer(f)
             writer.writerow(header)
             for line in lines:
@@ -89,22 +101,23 @@ def initialize_budget_file():
       username, year-month (YYYY-MM), budget_amount, alerted_50, alerted_80, alerted_exceeded
     """
     header = ["username", "month", "budget_amount", "alerted_50", "alerted_80", "alerted_exceeded"]
-    if not os.path.exists("budget.csv"):
-        with open("budget.csv", "w", newline="") as f:
+    file_path = get_file_path("budget.csv")
+    if not file_path.exists():
+        with open(file_path, "w", newline="") as f:
             csv.writer(f).writerow(header)
         return
 
-    with open("budget.csv", "r") as f:
+    with open(file_path, "r") as f:
         lines = [line.strip() for line in f.readlines()]
 
     if len(lines) == 0:
-        with open("budget.csv", "w", newline="") as f:
+        with open(file_path, "w", newline="") as f:
             csv.writer(f).writerow(header)
         return
 
     first_row = lines[0].split(",")
     if first_row != header:
-        with open("budget.csv", "w", newline="") as f:
+        with open(file_path, "w", newline="") as f:
             writer = csv.writer(f)
             writer.writerow(header)
             for line in lines:
@@ -118,22 +131,23 @@ def initialize_savings_file():
       username, goal_id, goal_name, target_amount, current_amount, created_on
     """
     header = ["username", "goal_id", "goal_name", "target_amount", "current_amount", "created_on"]
-    if not os.path.exists("savings.csv"):
-        with open("savings.csv", "w", newline="") as f:
+    file_path = get_file_path("savings.csv")
+    if not file_path.exists():
+        with open(file_path, "w", newline="") as f:
             csv.writer(f).writerow(header)
         return
 
-    with open("savings.csv", "r") as f:
+    with open(file_path, "r") as f:
         lines = [line.strip() for line in f.readlines()]
 
     if len(lines) == 0:
-        with open("savings.csv", "w", newline="") as f:
+        with open(file_path, "w", newline="") as f:
             csv.writer(f).writerow(header)
         return
 
     first_row = lines[0].split(",")
     if first_row != header:
-        with open("savings.csv", "w", newline="") as f:
+        with open(file_path, "w", newline="") as f:
             writer = csv.writer(f)
             writer.writerow(header)
             for line in lines:
@@ -203,9 +217,10 @@ def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
 def username_exists(username):
-    if not os.path.exists("password.csv"):
+    file_path = get_file_path("password.csv")
+    if not file_path.exists():
         return False
-    with open("password.csv", "r") as f:
+    with open(file_path, "r") as f:
         for row in csv.reader(f):
             if row and row[0] == username:
                 return True
@@ -224,10 +239,11 @@ def read_user_budget(username, month=None):
     if month is None:
         month = get_current_month()
 
-    if not os.path.exists("budget.csv"):
+    file_path = get_file_path("budget.csv")
+    if not file_path.exists():
         return None
 
-    with open("budget.csv", "r") as f:
+    with open(file_path, "r") as f:
         reader = csv.DictReader(f)
         for row in reader:
             if row.get("username") == username and row.get("month") == month:
@@ -251,9 +267,10 @@ def write_user_budget(username, month, budget_amount,
     """
     rows = []
     header = ["username", "month", "budget_amount", "alerted_50", "alerted_80", "alerted_exceeded"]
+    file_path = get_file_path("budget.csv")
 
-    if os.path.exists("budget.csv"):
-        with open("budget.csv", "r") as f:
+    if file_path.exists():
+        with open(file_path, "r") as f:
             rows = list(csv.reader(f))
 
     found = False
@@ -272,7 +289,7 @@ def write_user_budget(username, month, budget_amount,
     if not found:
         new_rows.append([username, month, str(budget_amount), alerted_50, alerted_80, alerted_exceeded])
 
-    with open("budget.csv", "w", newline="") as f:
+    with open(file_path, "w", newline="") as f:
         csv.writer(f).writerows(new_rows)
 
 
@@ -282,10 +299,11 @@ def get_user_savings_goals(username):
     {goal_id (int), goal_name, target_amount(float), current_amount(float), created_on}
     """
     goals = []
-    if not os.path.exists("savings.csv"):
+    file_path = get_file_path("savings.csv")
+    if not file_path.exists():
         return goals
 
-    with open("savings.csv", "r") as f:
+    with open(file_path, "r") as f:
         reader = csv.DictReader(f)
         for row in reader:
             if row.get("username") == username:
@@ -309,9 +327,10 @@ def write_user_savings_goals(username, goals_list):
     """
     rows = []
     header = ["username", "goal_id", "goal_name", "target_amount", "current_amount", "created_on"]
+    file_path = get_file_path("savings.csv")
 
-    if os.path.exists("savings.csv"):
-        with open("savings.csv", "r") as f:
+    if file_path.exists():
+        with open(file_path, "r") as f:
             rows = list(csv.reader(f))
 
     new_rows = []
@@ -333,12 +352,8 @@ def write_user_savings_goals(username, goals_list):
             g.get("created_on", datetime.now().date().isoformat())
         ])
 
-    with open("savings.csv", "w", newline="") as f:
+    with open(file_path, "w", newline="") as f:
         csv.writer(f).writerows(new_rows)
-
-
-initialize_all_files()
-
 
 
 def change_password(username):
@@ -349,7 +364,8 @@ def change_password(username):
 
     valid = False
     rows = []
-    with open("password.csv", "r") as f:
+    file_path = get_file_path("password.csv")
+    with open(file_path, "r") as f:
         rows = list(csv.reader(f))
 
     for row in rows:
@@ -385,7 +401,7 @@ def change_password(username):
         else:
             new_rows.append(row)
 
-    with open("password.csv", "w", newline="") as f:
+    with open(file_path, "w", newline="") as f:
         csv.writer(f).writerows(new_rows)
 
     print("Password successfully changed!\n")
@@ -428,11 +444,12 @@ def set_or_update_budget(username):
 def calculate_monthly_spending(username):
     month = get_current_month()
     total = 0.0
+    file_path = get_file_path("expenses.csv")
 
-    if not os.path.exists("expenses.csv"):
+    if not file_path.exists():
         return 0.0
 
-    with open("expenses.csv", "r") as f:
+    with open(file_path, "r") as f:
         rows = list(csv.reader(f))
 
     for row in rows[1:]:
@@ -649,13 +666,14 @@ def savings_menu(username):
 def export_expenses(username):
     print("\n--- EXPORT EXPENSES ---\n")
 
-    export_name = f"exported_expenses_{username}.csv"
+    export_name = get_file_path(f"exported_expenses_{username}.csv")
+    file_path = get_file_path("expenses.csv")
 
-    if not os.path.exists("expenses.csv"):
+    if not file_path.exists():
         print("No expenses found.\n")
         return
 
-    with open("expenses.csv", "r") as f:
+    with open(file_path, "r") as f:
         rows = list(csv.reader(f))
 
     header = rows[0]
@@ -685,7 +703,8 @@ def add_expense(username):
     payment = input("Enter payment mode (Cash/UPI/Card): ").strip()
     date = datetime.now().strftime("%Y-%m-%d")
 
-    with open("expenses.csv", "a", newline="") as f:
+    file_path = get_file_path("expenses.csv")
+    with open(file_path, "a", newline="") as f:
         csv.writer(f).writerow([date, amount, category, description, payment])
 
     print("Expense added.\n")
@@ -695,12 +714,13 @@ def add_expense(username):
 
 def view_expenses(username):
     print("\n--- ALL EXPENSES ---")
+    file_path = get_file_path("expenses.csv")
 
-    if not os.path.exists("expenses.csv"):
+    if not file_path.exists():
         print("No expenses found.\n")
         return
 
-    with open("expenses.csv", "r") as f:
+    with open(file_path, "r") as f:
         rows = list(csv.reader(f))
 
     if len(rows) <= 1:
@@ -720,12 +740,13 @@ def view_expenses(username):
 
 def edit_delete_expense(username):
     print("\n--- EDIT/DELETE EXPENSE ---")
+    file_path = get_file_path("expenses.csv")
 
-    if not os.path.exists("expenses.csv"):
+    if not file_path.exists():
         print("No expenses found.\n")
         return
 
-    with open("expenses.csv", "r") as f:
+    with open(file_path, "r") as f:
         rows = list(csv.reader(f))
 
     if len(rows) <= 1:
@@ -767,7 +788,7 @@ def edit_delete_expense(username):
         rows[choice] = [date, amt2, cat2, desc2, mode2]
         print("✔ Expense updated.\n")
 
-    with open("expenses.csv", "w", newline="") as f:
+    with open(file_path, "w", newline="") as f:
         csv.writer(f).writerows(rows)
 
 
@@ -798,110 +819,103 @@ def finance_menu(username):
         print("5. Set or update monthly budget")
         print("6. Savings goals")
         print("7. Export expenses to CSV")
-        print("8. Change password")
+        print("8. Change Password")
         print("9. Logout")
 
-        ch = input("Enter choice: ").strip()
+        choice = input("Enter choice: ").strip()
 
-        if ch == "1":
+        if choice == "1":
             add_expense(username)
-        elif ch == "2":
+        elif choice == "2":
             view_expenses(username)
-        elif ch == "3":
+        elif choice == "3":
             edit_delete_expense(username)
-        elif ch == "4":
+        elif choice == "4":
             monthly_summary(username)
-        elif ch == "5":
+        elif choice == "5":
             set_or_update_budget(username)
-        elif ch == "6":
+        elif choice == "6":
             savings_menu(username)
-        elif ch == "7":
+        elif choice == "7":
             export_expenses(username)
-        elif ch == "8":
+        elif choice == "8":
             change_password(username)
-        elif ch == "9":
+        elif choice == "9":
             print("Logged out.\n")
             break
         else:
-            print("Invalid option.\n")
-
-
-def login_user():
-    print("\n--- USER LOGIN ---\n")
-    username = input("Enter Username: ").strip()
-    password = getpass("Enter Password: ").strip()
-
-    encrypted = hash_password(password)
-
-    if not os.path.exists("password.csv"):
-        print("No users registered yet.\n")
-        return
-
-    with open("password.csv", "r") as f:
-        for row in csv.reader(f):
-            if row and row[0] == username and row[1] == encrypted:
-                print(f"\nWelcome back, {username}!\n")
-                finance_menu(username)
-                return
-
-    print("Incorrect username or password.\n")
-
-
-def register_user():
-    print("\n--- USER REGISTRATION ---\n")
-
-    first_name = get_input("Enter First Name: ", is_valid_name)
-    last_name = get_input("Enter Last Name: ", is_valid_name)
-    age = get_input("Enter Age: ", is_valid_age)
-    email = get_input("Enter Email: ", is_valid_email)
-
-    while True:
-        username = input("Create a Username: ").strip()
-        if username_exists(username):
-            print("Username already exists.\n")
-        else:
-            break
-
-    while True:
-        password = getpass("Create a Password: ")
-        errors = is_valid_password(password)
-        if errors:
-            for err in errors:
-                print(err)
-            print()
-        else:
-            break
-
-    encrypted = hash_password(password)
-
-
-    with open("userdata.csv", "a", newline="") as f:
-        csv.writer(f).writerow([first_name, last_name, age, email, username])
-
-    with open("password.csv", "a", newline="") as f:
-        csv.writer(f).writerow([username, encrypted])
-
-    print("\nRegistration successful!\n")
-    finance_menu(username)
+            print("Invalid choice.\n")
 
 
 def main():
+    initialize_all_files()
+    
+    print("Welcome to Personal Finance Manager")
     while True:
-        print("\n===== EXPENSE TRACKER =====")
-        print("1. Register")
-        print("2. Login")
+        print("\n1. Login")
+        print("2. Register")
         print("3. Exit")
-
-        ch = input("Choose (1/2/3): ").strip()
-
-        if ch == "1":
-            register_user()
-        elif ch == "2":
-            login_user()
-        elif ch == "3":
-            print("Thank you for using the app!")
+        
+        choice = input("Choose: ").strip()
+        
+        if choice == "1":
+            username = input("Username: ").strip()
+            password = getpass("Password: ")
+            hashed = hash_password(password)
+            
+            valid = False
+            file_path = get_file_path("password.csv")
+            if file_path.exists():
+                with open(file_path, "r") as f:
+                    reader = csv.reader(f)
+                    for row in reader:
+                        if row and row[0] == username and row[1] == hashed:
+                            valid = True
+                            break
+            
+            if valid:
+                print(f"Welcome back, {username}!")
+                finance_menu(username)
+            else:
+                print("Invalid credentials.")
+                
+        elif choice == "2":
+            print("\n--- REGISTER ---")
+            first_name = get_input("First Name: ", is_valid_name)
+            last_name = get_input("Last Name: ", is_valid_name)
+            age = get_input("Age: ", is_valid_age)
+            email = get_input("Email: ", is_valid_email)
+            
+            while True:
+                username = input("Username: ").strip()
+                if len(username) < 3:
+                    print("Username must be at least 3 chars.")
+                    continue
+                if username_exists(username):
+                    print("Username already taken.")
+                    continue
+                break
+                
+            password = get_input("Password: ", is_valid_password)
+            hashed = hash_password(password)
+            
+            # Save to password.csv
+            pw_path = get_file_path("password.csv")
+            with open(pw_path, "a", newline="") as f:
+                csv.writer(f).writerow([username, hashed])
+                
+            # Save to userdata.csv
+            ud_path = get_file_path("userdata.csv")
+            with open(ud_path, "a", newline="") as f:
+                csv.writer(f).writerow([first_name, last_name, age, email, username])
+                
+            print("Registration successful! Please login.\n")
+            
+        elif choice == "3":
+            print("Goodbye!")
             break
         else:
-            print("Invalid option.\n")
+            print("Invalid choice.")
+
 if __name__ == "__main__":
     main()
